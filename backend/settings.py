@@ -130,9 +130,16 @@ DATA_UPLOAD_MAX_MEMORY_SIZE = 2621440000
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'djongo',
+        'NAME': 'photobooth',
+        'CLIENT': {
+            'host': 'mongodb+srv://photobooth:2j1cN7oFmtEIZWtL@ahihi.ccg1k.mongodb.net/?retryWrites=true&w=majority&appName=Ahihi',
+        }
     }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': BASE_DIR / 'db.sqlite3',
+    # }
     # 'default': {
     #     'ENGINE': 'django.db.backends.mysql',
     #     'NAME': 'photomong_main',
