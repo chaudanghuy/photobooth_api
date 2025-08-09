@@ -6,8 +6,8 @@ from cloudinary.models import CloudinaryField
 class Frame(models.Model):     
      title = models.TextField()
      device_id = models.ForeignKey(Device, on_delete=models.CASCADE)
-     photo = models.ImageField(upload_to='frames')     
-     photo_hover = models.ImageField(upload_to='frames', default='frames/default.png')
+     photo = models.URLField(max_length=500, blank=True, null=True)     
+     photo_hover = models.URLField(max_length=500, blank=True, null=True)
      position = models.TextField(default='center')
      price = models.DecimalField(max_digits=10, decimal_places=0)
      created_at = models.DateTimeField(auto_now_add=True)
