@@ -1,0 +1,424 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+<div class="content-wrapper">
+  <div class="page-header">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="#">Setup</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">Device 1</li>
+      </ol>
+    </nav>
+  </div>
+
+  <!-- Step Progress Tracker -->
+  <div class="row">
+    <div class="stepper-wrapper">
+      <div class="stepper-item completed">
+        <a href="{% url 'frames' %}"
+          class="text-decoration-none text-black">
+          <div class="step-counter active">1</div>
+          <div class="step-name">Frame</div>
+        </a>
+      </div>
+      <div class="stepper-item completed">
+        <a href="{% url 'backgrounds' %}?frame=1"
+          class="text-decoration-none">
+          <div class="step-counter">2</div>
+          <div class="step-name">Stylist</div>
+        </a>
+      </div>
+      <div class="stepper-item">
+        <a href="{% url 'stickers' %}" class="text-decoration-none text-black">
+          <div class="step-counter">3</div>
+          <div class="step-name">Sticker</div>
+        </a>
+      </div>
+      <div class="stepper-item">
+        <a href="{% url 'payments' %}" class="text-decoration-none text-black">
+          <div class="step-counter">4</div>
+          <div class="step-name">Payment</div>
+        </a>
+      </div>
+    </div>
+  </div>
+  <!-- Step Progress Tracker -->
+
+  <!-- List Backgrounds -->
+  <div class="row">
+    <div class="col-lg-12 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-body">
+          <div class="float-end mb-5">
+            <a href="javascript:void(0)" type="button"
+              class="add-background btn btn-gradient-primary btn-rounded btn-fw"><span
+                class="mdi mdi-plus"></span> Add Background</a>
+          </div>
+          <div class="image-list-container">
+            <div class="api-loading spinner-border text-primary mx-auto d-none"
+              role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+            <div class="image-list image-list-background">
+            </div>
+            <div class="mt-3 text-center">
+              <button class="nav-button left">&#10094;</button>
+              <button class="nav-button right">&#10095;</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- List Backgrounds -->
+
+  <!-- Add background -->
+  <div class="add-background-container col-12 grid-margin stretch-card d-none">
+    <div class="card">
+      <div class="card-body">
+        <button class="btn-close float-end add-background-close"
+          type="button"></button>
+        <h4 class="card-title">Create Background</h4>
+
+        <form id="upload-background-form" method="post"
+          enctype="multipart/form-data" class="forms-sample">
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="title">Title</label>
+            <input type="text" class="form-control" id="title" name="title"
+              placeholder="Title" />
+          </div>
+          <div class="form-group">
+            <label for="position">Position</label>
+            <select name="position" id="position" class="form-select"
+              aria-label="Default select example">
+              {% for p in positions %}
+              <option value="{{ p }}">{{ p }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Photo</label>
+            <input class="form-control" type="file" id="photo" name="photo"
+              onchange="previewPhoto(event, 'photo_preview')" />
+            <img id="photo_preview" src="#" alt="Photo Preview"
+              style="display: none; max-width: 20%;"><br>
+          </div>
+          <div class="form-group">
+            <label>Photo (Hover)</label>
+            <input class="form-control" type="file" id="photo_hover"
+              name="photo_hover"
+              onchange="previewPhoto(event, 'photo_hover_preview')" />
+            <img id="photo_hover_preview" src="#" alt="Photo Preview"
+              style="display: none; max-width: 20%;"><br>
+          </div>
+          <div class="form-group">
+            <label>Photo <sup>Korean</sup></label>
+            <input class="form-control" type="file" id="photo_kr"
+              name="photo_kr"
+              onchange="previewPhoto(event, 'photo_kr_preview')" />
+            <img id="photo_kr_preview" src="#" alt="Photo Preview"
+              style="display: none; max-width: 20%;"><br>
+          </div>
+          <div class="form-group">
+            <label>Photo (Hover) <sup>Korean</sup></label>
+            <input class="form-control" type="file" id="photo_kr_hover"
+              name="photo_kr_hover"
+              onchange="previewPhoto(event, 'photo_kr_hover_preview')" />
+            <img id="photo_kr_hover_preview" src="#" alt="Photo Preview"
+              style="display: none; max-width: 20%;"><br>
+          </div>
+          <div class="form-group">
+            <label>Photo <sup>Vietnamese</sup></label>
+            <input class="form-control" type="file" id="photo_vn"
+              name="photo_vn"
+              onchange="previewPhoto(event, 'photo_vn_preview')" />
+            <img id="photo_vn_preview" src="#" alt="Photo Preview"
+              style="display: none; max-width: 20%;"><br>
+          </div>
+          <div class="form-group">
+            <label>Photo (Hover) <sup>Vietnamese</sup></label>
+            <input class="form-control" type="file" id="photo_vn_hover"
+              name="photo_vn_hover"
+              onchange="previewPhoto(event, 'photo_vn_hover_preview')" />
+            <img id="photo_vn_hover_preview" src="#" alt="Photo Preview"
+              style="display: none; max-width: 20%;"><br>
+          </div>
+          <div class="row d-flex justify-content-center">
+            <button type="submit"
+              class="btn btn-gradient-primary col-sm-2">Submit</button>
+            <button type="button"
+              class="btn btn-light col-sm-2 add-background-close">Close</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <!-- Add background -->
+
+  <!-- Edit background -->
+  <div class="edit-background-container col-12 grid-margin stretch-card d-none">
+    <div class="card">
+      <div class="card-body">
+        <button class="btn-close float-end cancel-edit-background"></button>
+        <h4 class="card-title">Edit Background</h4>
+        <form id="edit-background-form" method="post"
+          enctype="multipart/form-data" class="forms-sample">
+          {% csrf_token %}
+          <input type="hidden" id="background_id" name="background_id">
+          <div class="form-group">
+            <label for="title">Title</label>
+            <input type="text" class="form-control" id="background_title"
+              name="title" placeholder="Title" value />
+          </div>
+          <div class="form-group">
+            <label>Position</label>
+            <select name="position" id="background_position" class="form-select"
+              aria-label="Default select example">
+              {% for p in positions %}
+              <option value="{{ p }}">{{ p }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Photo</label>
+            <input class="form-control" type="file" id="photo" name="photo"
+              onchange="previewPhoto(event, 'photo_preview')" />
+            <img id="photo_preview" src alt="Photo Preview"><br>
+          </div>
+          <div class="form-group">
+            <label>Photo (Hover)</label>
+            <input class="form-control" type="file" id="photo_hover"
+              name="photo_hover"
+              onchange="previewPhoto(event, 'photo_hover_preview')" />
+            <img id="photo_hover_preview" src alt="Photo Preview"><br>
+          </div>
+          <div class="form-group">
+            <label>Photo <sup>Korean</sup></label>
+            <input class="form-control" type="file" id="photo_kr"
+              name="photo_kr"
+              onchange="previewPhoto(event, 'photo_kr_preview')" />
+            <img id="photo_kr_preview" src alt="Photo Preview"><br>
+          </div>
+          <div class="form-group">
+            <label>Photo (Hover) <sup>Korean</sup></label>
+            <input class="form-control" type="file" id="photo_kr_hover"
+              name="photo_kr_hover"
+              onchange="previewPhoto(event, 'photo_kr_hover_preview')" />
+            <img id="photo_kr_hover_preview" src alt="Photo Preview"><br>
+          </div>
+          <div class="form-group">
+            <label>Photo <sup>Vietnamese</sup></label>
+            <input class="form-control" type="file" id="photo_vn"
+              name="photo_vn"
+              onchange="previewPhoto(event, 'photo_vn_preview')" />
+            <img id="photo_vn_preview" src alt="Photo Preview"><br>
+          </div>
+          <div class="form-group">
+            <label>Photo (Hover) <sup>Vietnamese</sup></label>
+            <input class="form-control" type="file" id="photo_vn_hover"
+              name="photo_vn_hover"
+              onchange="previewPhoto(event, 'photo_vn_hover_preview')" />
+            <img id="photo_vn_hover_preview" src alt="Photo Preview"><br>
+          </div>
+          <div class="row d-flex justify-content-center">
+            <button type="submit"
+              class="btn btn-gradient-primary col-sm-2">Submit</button>
+            <button type="button"
+              class="cancel-edit-background btn btn-light col-sm-2">Close</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <!-- Edit background -->
+
+  <!--
+    SEASONS PART HERE
+  -->
+  <!-- List Layouts -->
+  <div class="row list-layouts-container d-none">
+    <div class="col-lg-12 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">
+            Layout
+          </h4>
+          <div class="d-flex justify-content-between">
+            <div class="row col-sm-2">
+              <select class="choose-frame-layout form-select form-control-sm">
+                <option value="0">--Select Frame--</option>
+                {% for frame in frames %}
+                <option value="{{ frame.id }}" {% if frame.id == frameId %}
+                  selected {% endif %}>{{ frame.title }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="float-end mb-5">
+              <a href="javascript:void(0)" type="button"
+                class="add-layout btn btn-gradient-primary btn-rounded btn-fw"><span
+                  class="mdi mdi-plus"></span> Add Layout</a>
+            </div>
+          </div>
+          <div class="image-list-container">
+            <div class="api-loading spinner-border text-primary mx-auto d-none"
+              role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+            <div class="image-list image-list-layouts">
+            </div>
+            <div class="mt-3 text-center">
+              <button class="nav-button left">&#10094;</button>
+              <button class="nav-button right">&#10095;</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- List Layouts -->
+
+  <!-- Add Layout -->
+  <div class="col-12 grid-margin stretch-card add-layout-container d-none">
+    <div class="card">
+      <div class="card-body">
+        <button class="btn-close float-end cancel-add-layout" type="button"></button>
+        <h4 class="card-title">Create Layout</h4>
+        <form id="upload-layout-form" method="post"
+          enctype="multipart/form-data" class="forms-sample">
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="title">Title</label>
+            <input type="text" class="form-control" id="title" name="title"
+              placeholder="Example: Season-4cut-1" />
+          </div>
+          <input type="hidden" name="position" id="position"
+            value="{{ position_list.0 }}" />
+          <input type="hidden" name="frame" id="frame"
+            value="{{ frame_list.0.title }}" />
+          <input type="hidden" name="background" id="background"
+            value="{{ background_list.0.id }}" />
+          <div class="form-group">
+            <label>Photo</label>
+            <input class="form-control add-photo-input" type="file" id="photo" name="photo" />
+            <img class="photo_preview" id="photo_preview" src="#"
+              alt="Photo Preview" style="display: none;" /><br />
+          </div>
+          <div class="form-group">
+            <label>Photo Cover</label>
+            <input class="form-control add-photo-input" type="file" id="photo_cover" name="photo_cover"/>
+            <img class="photo_preview" id="photo_cover_preview" src="#"
+              alt="Photo Cover Preview" style="display: none;" /><br />
+          </div>
+          <div class="form-group">
+            <label>Photo Full</label>
+            <input class="form-control add-photo-input" type="file" id="photo_full" name="photo_full"/>
+            <img class="photo_preview" id="photo_full_preview" src="#"
+              alt="Photo Full Preview" style="display: none;" /><br />
+          </div>
+          <div class="row d-flex justify-content-center">
+            <button type="submit"
+              class="btn btn-gradient-primary col-sm-2">Submit</button>
+            <button class="btn btn-light col-sm-2" id="cancel-add-layout"
+              type="button">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <!-- Add Layout -->
+
+  <!-- Edit Layout -->
+  <div class="col-12 grid-margin stretch-card edit-layout-container d-none">
+    <div class="card">
+      <div class="card-body">
+        <button class="float-end btn-close cancel-edit-layout"></button>
+        <h4 class="card-title">Edit Layout</h4>                
+        <form id="edit-layout-form" method="post" enctype="multipart/form-data" class="forms-sample">
+          {% csrf_token %}
+          <input type="hidden" id="layout_id" name="layout_id">
+          <div class="form-group">
+            <label for="title">Title</label>
+            <input type="text" class="form-control" id="title" name="title"
+              placeholder="Title" value="" />
+          </div>
+          <div class="form-group">
+            <label for="position">Position</label>
+            <select name="position" id="position" class="form-select"
+              aria-label="Default select example">
+              {% for p in position_list %}
+              <option value="{{ p }}">{{ p }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="frame">Background</label>
+            <select name="background" id="background" class="form-select"
+              aria-label="Default select example">
+              {% for background in backgrounds %}
+              <option value="{{ background.id }}">{{ background.title }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="frame">Frames</label>
+            <select name="frame" id="frame" class="form-select"
+              aria-label="Default select example">
+              {% for frame in frames %}
+              <option value="{{ frame.id }}">{{ frame.title }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Photo</label>
+            <input class="form-control edit-photo-input" type="file" id="photo" name="photo"
+              onchange="previewPhoto(event, 'photo_preview')" />
+            <img class="photo_preview" id="photo_preview"
+              src="" alt="Photo Preview"><br>
+          </div>
+          <div class="form-group">
+            <label>Photo Cover</label>
+            <input class="form-control edit-photo-input" type="file" id="photo_cover"
+              name="photo_cover"
+              onchange="previewPhoto(event, 'photo_cover_preview')" />
+            <img class="photo_preview" id="photo_cover_preview"
+              src="" alt="Photo Preview"><br>
+          </div>
+          <div class="form-group">
+            <label>Photo Full</label>
+            <input class="form-control edit-photo-input" type="file" id="photo_full"
+              name="photo_full"
+              onchange="previewPhoto(event, 'photo_full_preview')" />
+            <img class="photo_preview" id="photo_full_preview"
+              src="" alt="Photo Preview"><br>
+          </div>
+          <div class="row d-flex justify-content-center">
+            <button type="submit"
+            class="btn btn-gradient-primary col-sm-2">Submit</button>
+            <button class="btn btn-light btn-outline-secondary col-sm-2">Close</button>        
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <!-- Edit Layout -->
+
+</div>
+
+<!-- Toast -->
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+  <div id="liveToast" class="toast" role="alert" aria-live="assertive"
+    aria-atomic="true">
+    <div class="toast-body">
+      Background added successfully
+    </div>
+  </div>
+</div>
+<!-- Toast -->
+
+<script src="{% static 'js/main/backgrounds.js' %}" />
+{% endblock %}

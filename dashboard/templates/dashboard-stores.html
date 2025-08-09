@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+<div class="content-wrapper">
+  <div class="page-header">
+    <h3 class="page-title"><span
+        class="page-title-icon bg-gradient-primary text-white me-2"><i
+          class="mdi mdi-store"></i></span> {{ device.name }}</h3>
+    <nav aria-label="breadcrumb">
+      <ul class="breadcrumb">
+        <li class="breadcrumb-item active" aria-current="page">
+          <li class="breadcrumb-item active" aria-current="page">
+            <a href="{% url 'dashboard' %}"><span
+                class="mdi mdi-keyboard-backspace"></span> Back to Devices</a>
+          </li>
+        </li>
+      </ul>
+    </nav>
+  </div>
+  <div class="row">
+    <div class="col-md-4 stretch-card grid-margin">
+      <div class="card bg-gradient-danger card-img-holder text-white">
+        <div class="card-body">
+          <img src="{% static 'images/dashboard/circle.svg' %}"
+            class="card-img-absolute" alt="circle-image" />
+          <h4 class="font-weight-normal mb-3">Revenue</h4>
+          <h2 class="mb-5">{{ total_amount|intcomma }}</h2>
+          <!-- <h6 class="card-text">Increased by 60%</h6> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12 grid-margin">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">Orders</h4>
+          <div class="table-responsive">
+            {% if transactions %}
+            <table id="order-table" class="table cell-border">
+              <thead>
+                <tr>
+                  <th>Order</th>
+                  <th>Photo</th>
+                  <th>Device</th>
+                  <th>Payment</th>
+                  <th>Total</th>
+                  <th>Status</th>
+                  <th>Created Date</th>
+                  <th>Tracking ID</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for transaction in transactions %}
+                <tr>
+                  <td>{{ transaction.order_id.order_code }}</td>
+                  <td>
+                    <a href="{{ transaction.order_id.photo_url_done }}"
+                      target="_blank">Click here</a>
+                  </td>
+                  <td>{{ transaction.order_id.device_id.name }}</td>
+                  <td>{{ transaction.payment_id.name }}</td>
+                  <td>{{ transaction.amount|intcomma }}</td>
+                  <td>
+                    {% if transaction.transaction_status == 'Pending' %}
+                    <label class="badge badge-gradient-warning">Pending</label>
+                    {% elif transaction.transaction_status == 'Success' %}
+                    <label class="badge badge-gradient-success">DONE</label>
+                    {% elif transaction.transaction_status == 'Failed' %}
+                    <label class="badge badge-gradient-danger">Failed</label>
+                    {% endif %}
+                  </td>
+                  <td>{{ transaction.created_at }}</td>
+                  <td>{{ transaction.order_id.order_code }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+            {% else %}
+            <p class="card-description">No order!</p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+    let table = new DataTable('#order-table');
+  </script>
+{% endblock %}

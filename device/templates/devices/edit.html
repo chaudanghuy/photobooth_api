@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="col-12 grid-margin stretch-card">
+  <div class="card">
+    <div class="card-body">
+      {% if messages %}
+      <ul>
+        {% for message in messages %}
+        <li>{{ message }}</li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+      <h4 class="card-title">Device</h4>
+      <p class="card-description">Update Device</p>
+      <form method="post" novalidate class="forms-sample">
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input type="text" name="name" class="form-control" id="name" placeholder="Name" value="{{ device.name }}"/>
+        </div>
+        <div class="form-group">
+          <label for="code">Code</label>
+          <input type="text" name="code" class="form-control" id="code" placeholder="Device Code" value="{{ device.code }}"/>
+        </div>
+        <div class="form-group">
+          <label for="store_id">Store</label>
+          <select id="store_id" name="store_id" class="form-select" aria-label="Default select example">
+            {% for store in stores %}
+            <option value="{{ store.id }}" {% if store.id == device.store_id.id %} selected {% endif %}>{{ store.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="photo_shooting_time">Photo Shooting Time (second)</label>
+          <input type="text" name="photo_shooting_time" class="form-control" id="photo_shooting_time"
+            placeholder="Photo Shooting Time" value="{{ device.photo_shooting_time }}"/>
+        </div>
+        <div class="form-group">
+          <label for="photo_suffer_time">Photo Suffer Time (second)</label>
+          <input type="text" name="photo_suffer_time" class="form-control" id="photo_suffer_time"
+            placeholder="Photo Suffer Time" value="{{ device.photo_suffer_time }}"/>
+        </div>
+        <div class="form-group">
+          <label for="photo_work_time">Photo Work Time</label>
+          <input type="time" name="photo_work_time" class="form-control" id="photo_work_time"
+            placeholder="Photo Work Time" value="{{ device.photo_work_time }}"/>
+        </div>
+        <div class="form-group">
+          <label for="product_price">Product Price</label>
+          <input type="text" name="product_price" class="form-control" id="product_price" placeholder="Product Price" value="{{ device.product_price }}"/>
+        </div>
+        <div class="form-group">
+          <label for="contact_number">Contact Number</label>
+          <input type="text" name="contact_number" class="form-control" id="contact_number"
+            placeholder="Contact Number" value="{{ device.contact_number }}"/>
+        </div>
+        <div class="form-group">
+          <label for="status">Status</label>
+          <select id="status" name="status" class="form-select" aria-label="Status">
+            <option {% if device.status == 'Online' %} selected {% endif %}>Online</option>
+            <option {% if device.status == 'Offline' %} selected {% endif %}>Offline</option>
+            <option {% if device.status == 'Disable' %} selected {% endif %}>Disable</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-gradient-primary me-2">Submit</button>
+        <a href="{% url 'devices' %}" class="btn btn-light">Cancel</a>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

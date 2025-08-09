@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="content-wrapper">
+  <div class="page-header">
+    <h3 class="page-title">Stores</h3>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item active" aria-current="page">
+          <a href="{% url 'stores-add' %}" type="button" class="btn btn-gradient-primary btn-rounded btn-fw">Add Store</a>
+        </li>
+      </ol>
+    </nav>
+  </div>
+  <div class="row">
+    <div class="col-lg-12 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">Stores List</h4>
+          {% if stores %}
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>Store</th>
+                <th>Address</th>  
+                <th></th>              
+              </tr>
+            </thead>
+            <tbody>
+              {% for store in stores %}
+              <tr>
+                <td>{{ store.name }}</td>
+                <td>{{ store.address }}</td>                
+                <td>
+                  <a href="{% url 'stores-edit' store.id %}" type="button" class="btn btn-outline-info btn-fw">Edit</button>
+                </td>
+              </tr> 
+              {% endfor %}             
+            </tbody>
+          </table>
+          {% else %}          
+          <p class="card-description">🎉 Yay, Let setup first store!</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

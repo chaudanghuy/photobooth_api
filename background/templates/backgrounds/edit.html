@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="col-12 grid-margin stretch-card">
+  <div class="card">
+    <div class="card-body">
+      <h4 class="card-title">Background</h4>
+      <p class="card-description">Edit Background</p>
+      <form method="post" enctype="multipart/form-data" class="forms-sample">
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="title">Title</label>
+          <input type="text" class="form-control" id="title" name="title" placeholder="Title" value="{{ background.title }}"/>
+        </div>
+        <div class="form-group">
+          <label>Position</label>
+          <select name="position" id="position" class="form-select" aria-label="Default select example">
+            {% for p in positions %}
+            <option value="{{ p }}" {% if p == background.position %} selected {% endif %}>{{ p }}</option>
+            {% endfor %}
+          </select>
+        </div>        
+        <div class="form-group">
+          <label>Photo</label>
+          <input class="form-control" type="file" id="photo" name="photo" onchange="previewPhoto(event, 'photo_preview')"/>
+          <img id="photo_preview" src="{{ background.photo.url }}" alt="Photo Preview"><br>
+        </div>
+        <div class="form-group">
+          <label>Photo (Hover)</label>
+          <input class="form-control" type="file" id="photo_hover" name="photo_hover" onchange="previewPhoto(event, 'photo_hover_preview')"/>
+          <img id="photo_hover_preview" src="{{ background.photo_hover.url }}" alt="Photo Preview"><br>
+        </div>
+        <div class="form-group">
+          <label>Photo <sup>Korean</sup></label>
+          <input class="form-control" type="file" id="photo_kr" name="photo_kr" onchange="previewPhoto(event, 'photo_kr_preview')"/>
+          <img id="photo_kr_preview" src="{{ background.photo_kr.url }}" alt="Photo Preview"><br>
+        </div>
+        <div class="form-group">
+          <label>Photo (Hover) <sup>Korean</sup></label>
+          <input class="form-control" type="file" id="photo_kr_hover" name="photo_kr_hover" onchange="previewPhoto(event, 'photo_kr_hover_preview')"/>
+          <img id="photo_kr_hover_preview" src="{{ background.photo_kr_hover.url }}" alt="Photo Preview"><br>
+        </div>
+        <div class="form-group">
+          <label>Photo <sup>Vietnamese</sup></label>
+          <input class="form-control" type="file" id="photo_vn" name="photo_vn" onchange="previewPhoto(event, 'photo_vn_preview')"/>
+          <img id="photo_vn_preview" src="{{ background.photo_vn.url }}" alt="Photo Preview"><br>
+        </div>
+        <div class="form-group">
+          <label>Photo (Hover) <sup>Vietnamese</sup></label>
+          <input class="form-control" type="file" id="photo_vn_hover" name="photo_vn_hover" onchange="previewPhoto(event, 'photo_vn_hover_preview')"/>
+          <img id="photo_vn_hover_preview" src="{{ background.photo_vn_hover.url }}" alt="Photo Preview"><br>
+        </div>        
+        <button type="submit" class="btn btn-gradient-primary me-2">Submit</button>
+        <a href="{% url 'backgrounds' %}" class="btn btn-light">Cancel</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  function previewPhoto(event, preview) {
+      var input = event.target;
+      var reader = new FileReader();
+      reader.onload = function() {
+          var img = document.getElementById(preview);
+          img.src = reader.result;
+          img.style.display = 'block';
+      }
+      reader.readAsDataURL(input.files[0]);
+  }
+</script>
+{% endblock %}

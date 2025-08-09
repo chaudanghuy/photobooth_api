@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+            padding: 16px;
+        }
+        .grid-item {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        .grid-item img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: cover;
+        }
+        .delete-button {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background-color: red;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            cursor: pointer;
+        }
+        .back-link {
+            display: block;
+            margin: 16px 0;
+            text-align: center;
+        }
+</style>
+<script>
+    function confirmDelete(event) {
+        if (!confirm('Are you sure you want to delete this image?')) {
+            event.preventDefault();
+        }
+    }
+</script>
+<div class="col-12 grid-margin stretch-card">
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">Photo</h4>
+            <div class="grid-container">
+                {% for image in images %}
+                <div class="grid-item">
+                    <img class="img-fluid img-responsive" src="{{ image.url }}"
+                        alt="{{ image.name }}" width="200">
+                        <form method="post" action="{% url 'photo_delete' folder_id image.name %}">
+                            {% csrf_token %}
+                            <button type="submit" class="delete-button" onclick="confirmDelete(event)">Delete</button>
+                        </form>
+                </div>
+                {% endfor %}
+            </div>
+            <a href="{% url 'photo_list' %}">Back to list</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

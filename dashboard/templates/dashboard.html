@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+  <div class="content-wrapper">
+    {% if stores %}
+      {% for store in stores %}
+        <div class="page-header">
+          <h3 class="page-title"><span class="page-title-icon bg-gradient-primary text-white me-2"><i class="mdi mdi-store"></i></span>{{ store.name }}</h3>
+          <nav aria-label="breadcrumb">
+            <ul class="breadcrumb">
+              <li class="breadcrumb-item active" aria-current="page">
+                <span></span>Overview <i class="mdi mdi-alert-circle-outline icon-sm text-primary align-middle"></i>
+              </li>
+            </ul>
+          </nav>
+        </div>
+        <div class="row">
+          {% for device in devices %}
+            {% if device.store_id|stringformat:"s" == store.name|stringformat:"s" %}
+              <div class="col-md-4 stretch-card grid-margin">
+                {% if device.status == 'Online' %}
+                <div class="card bg-gradient-success card-img-holder text-white">
+                {% else %}
+                <div class="card bg-gradient-danger card-img-holder text-white">
+                {% endif %}
+                  <div class="card-body">
+                    <img src="{% static 'images/dashboard/circle.svg' %}" class="card-img-absolute" alt="circle-image" />
+                    <a href="{% url 'dashboard-stores' device.id %}" style="text-decoration: none;">
+                    <h4 class="font-weight-normal mb-3">{{ device.name }} <sup>{{ device.status }}</sup></h4>
+                    </a>
+                    {% comment %} <h2 class="mb-5">{{ total_amount|intcomma }}</h2> {% endcomment %}
+                    <!-- <h6 class="card-text">Increased by 60%</h6> -->
+                  </div>
+                </div>
+              </div>              
+            {% endif %}
+          {% endfor %}
+        </div>
+      {% endfor %}
+    {% endif %}
+  </div>
+{% endblock %}

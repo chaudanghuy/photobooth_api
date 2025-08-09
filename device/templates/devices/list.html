@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="content-wrapper">
+  <div class="page-header">
+    <h3 class="page-title">Devices</h3>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item active" aria-current="page">
+          <a href="{% url 'devices-add' %}" type="button" class="btn btn-gradient-primary btn-rounded btn-fw"><span class="mdi mdi-plus"></span> Add
+            Device</a>
+        </li>
+      </ol>
+    </nav>
+  </div>
+  <div class="row">
+    <div class="col-lg-12 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">Devices List</h4>
+
+          {% if devices %}
+          <table id="devices-table" class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Device</th>
+                <th>Device Code</th> 
+                <th>Store</th>
+                <th>Status</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for device in devices %}
+              <tr>
+                <td>{{device.name}}</td>
+                <td>{{device.code}}</td>
+                <td>{{device.store_id.name}}</td>
+                <td>
+
+                  {% if device.status == 'Online' %}
+                  <label class="badge badge-success">Online</label>
+                  {% else %}
+                  <label class="badge badge-danger">{{device.status}}</label>
+                  {% endif %}
+                </td>
+                <td>
+                  <a href="{% url 'devices-edit' device.id %}" type="button" class="text-center btn btn-gradient-primary btn-rounded btn-fw"><span
+                    class="mdi mdi-pencil"></span> Edit</a>
+                  <a href="{% url 'frames' %}" type="button" class="text-center btn btn-gradient-primary btn-rounded btn-fw"><span
+                      class="mdi mdi-cloud"></span> Setup</a>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          {% else %}
+          <p class="card-description">🎉 Yay, Let setup first device!</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  let table = new DataTable('#devices-table');
+</script>
+
+{% endblock %}

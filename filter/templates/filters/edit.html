@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="col-12 grid-margin stretch-card">
+  <div class="card">
+    <div class="card-body">
+      <h4 class="card-title">Filters</h4>
+      <p class="card-description">Edit Filter</p>
+      <form method="post" enctype="multipart/form-data" class="forms-sample">
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="title">Title</label>
+          <input type="text" class="form-control" name="title" id="title" placeholder="Title" value="{{filter.title}}"/>
+        </div>
+        <div class="form-group">
+          <label for="color_mode">Color Mode</label><br>
+          <input type="color" name="color_mode" id="color_mode" placeholder="color_mode" value="{{filter.color_mode}}"/>
+        </div>
+        <div class="form-group">
+          <label for="photo_shooting_time">Photo</label>
+          <input class="form-control" type="file" id="photo" name="photo" onchange="previewPhoto(event)">
+          <img id="photo_preview" src="{{filter.photo.url}}" alt="Photo Preview"><br>
+        </div>          
+        <button type="submit" class="btn btn-gradient-primary me-2">Submit</button>
+        <a href="{% url 'filters' %}" class="btn btn-light">Cancel</a>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  function previewPhoto(event) {
+      var input = event.target;
+      var reader = new FileReader();
+      reader.onload = function() {
+          var img = document.getElementById('photo_preview');
+          img.src = reader.result;
+          img.style.display = 'block';
+      }
+      reader.readAsDataURL(input.files[0]);
+  }
+</script>
+{% endblock %}

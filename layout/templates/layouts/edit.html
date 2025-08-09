@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="col-12 grid-margin stretch-card">
+  <div class="card">
+    <div class="card-body">
+      <h4 class="card-title">Layout</h4>
+      <p class="card-description">Create Layout</p>
+      <form method="post" enctype="multipart/form-data" class="forms-sample">
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="title">Title</label>
+          <input type="text" class="form-control" id="title" name="title" placeholder="Title" value="{{ layout.title }}"/>
+        </div>
+        <div class="form-group">
+          <label for="position">Position</label>
+          <select name="position" id="position" class="form-select" aria-label="Default select example">
+            {% for p in position_list %}
+              <option value="{{ p }}" {% if p == layout.position %} selected {% endif %}>{{ p }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="frame">Background</label>
+          <select name="background" id="background" class="form-select" aria-label="Default select example">
+            {% for background in backgrounds %}
+            <option value="{{ background.id }}" {% if background.id == layout.background.id %} selected {% endif %}>{{ background.title }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="frame">Frames</label>
+          <select name="frame" id="frame" class="form-select" aria-label="Default select example">
+            {% for frame in frames %}
+              <option value="{{ frame.id }}" {% if frame.id == layout.frame.id %} selected {% endif %}>{{ frame.title }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Photo</label>
+          <input class="form-control" type="file" id="photo" name="photo" onchange="previewPhoto(event, 'photo_preview')" />
+          <img class="photo_preview" id="photo_preview" src="{{ layout.photo.url }}" alt="Photo Preview"><br>
+        </div>
+        <div class="form-group">
+          <label>Photo Cover</label>
+          <input class="form-control" type="file" id="photo_cover" name="photo_cover" onchange="previewPhoto(event, 'photo_cover_preview')" />
+          <img class="photo_preview" id="photo_cover_preview" src="{{ layout.photo_cover.url }}" alt="Photo Preview"><br>
+        </div>
+        <div class="form-group">
+          <label>Photo Full</label>
+          <input class="form-control" type="file" id="photo_full" name="photo_full" onchange="previewPhoto(event, 'photo_full_preview')" />
+          <img class="photo_preview" id="photo_full_preview" src="{{ layout.photo_full.url }}" alt="Photo Preview"><br>
+        </div>
+        <button type="submit" class="btn btn-gradient-primary me-2">Submit</button>
+        <a href="{% url 'layouts' %}" class="btn btn-light">Cancel</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  function previewPhoto(event, preview) {
+    var input = event.target;
+    var reader = new FileReader();
+    reader.onload = function () {
+      var img = document.getElementById(preview);
+      img.src = reader.result;
+      img.style.display = 'block';
+    }
+    reader.readAsDataURL(input.files[0]);
+  }
+</script>
+{% endblock %}

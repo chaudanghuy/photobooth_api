@@ -1,0 +1,56 @@
+{% load static %}
+
+<nav class="sidebar sidebar-offcanvas" id="sidebar">
+  <ul class="nav">
+    <li class="nav-item nav-profile">
+      <a href="#" class="nav-link">
+        <div class="nav-profile-image">
+          <img src="{% static 'images/faces/face1.jpg' %}" alt="profile" />
+          <span class="login-status online"></span>
+          <!-- change to offline or busy as needed -->
+        </div>
+        <div class="nav-profile-text d-flex flex-column">
+          <span class="font-weight-bold mb-2">{{ request.user }}</span>
+          <span class="text-secondary text-small">Admin</span>
+        </div>
+        <i class="mdi mdi-bookmark-check text-success nav-profile-badge"></i>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="{% url 'dashboard' %}">
+        <span class="menu-title">Dashboard</span>
+        <i class="mdi mdi-home menu-icon"></i>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="{% url 'redeems' %}">
+        <span class="menu-title">Redeems</span>
+        <i class="mdi mdi-star menu-icon"></i>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="{% url 'photo_list' %}">
+        <span class="menu-title">Photos</span>
+        <i class="mdi mdi-camera menu-icon"></i>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="{% url 'stores' %}">
+        <span class="menu-title">Stores</span>
+        <i class="mdi mdi-store menu-icon"></i>
+      </a>
+    </li>    
+    <li class="nav-item">
+      <a class="nav-link" href="{% url 'devices' %}">
+        <span class="menu-title">All Devices</span>
+        <i class="mdi mdi-laptop-windows menu-icon"></i>
+      </a>
+    </li>   
+    <li class="nav-item">
+      <a class="nav-link" href="{% url 'frames' %}">
+        <span class="menu-title">Setup Photomong</span>
+        <i class="mdi mdi-cloud-check menu-icon"></i>
+      </a>
+    </li>            
+  </ul>
+</nav>

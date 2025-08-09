@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="col-12 grid-margin stretch-card">
+  <div class="card">
+    <div class="card-body">
+      <h4 class="card-title">Store {{store.name}}</h4>
+      {% if messages %}
+          <ul>
+              {% for message in messages %}
+                  <li>{{ message }}</li>
+              {% endfor %}
+          </ul>
+        {% endif %}
+      <form method="post" novalidate class="forms-sample">
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="store">Store</label>
+          <input name="name" type="text" class="form-control" id="store" placeholder="Name" value="{{ store.name }}"/>
+        </div>
+        <div class="form-group">
+          <label for="address">Address</label>
+          <textarea name="address" class="form-control" id="address" rows="4">
+            {{ store.address }}
+          </textarea>
+        </div>          
+        <button type="submit" class="btn btn-gradient-primary me-2">Submit</button>
+        <button class="btn btn-light">Cancel</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

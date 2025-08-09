@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="content-wrapper">
+    <div class="page-header">
+        <h3 class="page-title">Photos</h3>        
+    </div>
+    <div class="row">
+        <div class="col-lg-12 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">                    
+                    <table id="frames-table" class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th><i class="mdi mdi-folder-multiple-outline"></i> UUID</th>                                
+                                <th><i class="mdi mdi-calendar-clock"></i> Date</th>
+                                <th><i class="mdi mdi-cloud-check"></i></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if subfolders %}
+                            {% for folder in subfolders %}
+                            <tr>                                
+                                <td>{{ folder.name }}</td>                                
+                                <td>{{ folder.date_created|date:"d/m/Y H:i:s" }}</td>
+                                <td>
+                                    <div class="row">
+                                        <div class="col-sm-6 text-end">
+                                            <a
+                                                href="{% url 'photo_detail' folder.name %}"
+                                                target="_blank"
+                                                type="button"
+                                                class="btn btn-gradient-primary btn-rounded btn-fw"><span
+                                                    class="mdi mdi-file-image"></span>
+                                                View</a>
+                                        </div>                                        
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}                            
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let table = new DataTable('#frames-table', {ordering: false});
+  </script>
+{% endblock %}

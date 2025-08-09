@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="col-12 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">Add Sticker</h4>
+        
+        {% if messages %}          
+          {% for message in messages %}
+            <p class="card-description">{{message}}</p>
+          {% endfor %}            
+        {% endif %}         
+
+        <form method="post" enctype="multipart/form-data" class="forms-sample">
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="category">Category</label>
+            <select class="form-select" id="category" name="category">
+              <option value="MOOD">MOOD</option>
+              <option value="LOVELY">LOVELY</option>              
+              <option value="CARTOON">CARTOON</option>
+              <option value="Y2K">Y2K</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="title">Title</label>
+            <input type="text" class="form-control" id="title" name="title" placeholder="title" />
+          </div>
+          <div class="form-group">
+            <label for="photo_shooting_time">Photo</label>
+            <input class="form-control" type="file" id="photo" name="photo" onchange="previewPhoto(event)">
+            <img id="photo_preview" src="#" alt="Photo Preview" style="display: none;"><br>
+          </div>
+          <button type="submit" class="btn btn-gradient-primary me-2">Submit</button>
+          <button class="btn btn-light">Cancel</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function previewPhoto(event) {
+        var input = event.target;
+        var reader = new FileReader();
+        reader.onload = function() {
+            var img = document.getElementById('photo_preview');
+            img.src = reader.result;
+            img.style.display = 'block';
+        }
+        reader.readAsDataURL(input.files[0]);
+    }
+  </script>
+{% endblock %}
