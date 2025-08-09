@@ -129,28 +129,28 @@ DATA_UPLOAD_MAX_MEMORY_SIZE = 2621440000
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'djongo',
-        'NAME': 'photobooth',
-        'CLIENT': {
-            'host': 'mongodb+srv://photobooth:2j1cN7oFmtEIZWtL@ahihi.ccg1k.mongodb.net/?retryWrites=true&w=majority&appName=Ahihi',
-        }
-    }
+    # 'default': {
+    #     'ENGINE': 'djongo',
+    #     'NAME': 'photobooth',
+    #     'CLIENT': {
+    #         'host': 'mongodb+srv://photobooth:2j1cN7oFmtEIZWtL@ahihi.ccg1k.mongodb.net/?retryWrites=true&w=majority&appName=Ahihi',
+    #     }
+    # }
     # 'default': {
     #     'ENGINE': 'django.db.backends.sqlite3',
     #     'NAME': BASE_DIR / 'db.sqlite3',
     # }
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.mysql',
-    #     'NAME': 'photomong_main',
-    #     'USER': 'root',
-    #     'PASSWORD': '',
-    #     'HOST': 'localhost',
-    #     'PORT': '3306',    
-    #     'OPTIONS': {
-    #         'sql_mode': 'traditional',
-    #     }
-    # }
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'photobooth_test',
+        'USER': '425879',
+        'PASSWORD': 'wSYBv_RQ5Tjw@#3',
+        'HOST': 'mysql-photobooth.alwaysdata.net',
+        'PORT': '3306',    
+        'OPTIONS': {
+            'sql_mode': 'traditional',
+        }
+    }
 }
 
 
