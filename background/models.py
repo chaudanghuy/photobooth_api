@@ -4,7 +4,7 @@ from frame.models import Frame
 # Create your models here.
 class Background(models.Model):
     title = models.TextField()
-    photo = models.ImageField(upload_to='backgrounds')
+    photo = models.URLField(max_length=500, blank=True, null=True)
     photo_hover = models.URLField(max_length=500, blank=True, null=True)
     photo_vn = models.URLField(max_length=500, blank=True, null=True)
     photo_vn_hover = models.URLField(max_length=500, blank=True, null=True)
