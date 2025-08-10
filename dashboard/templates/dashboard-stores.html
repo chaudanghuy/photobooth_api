@@ -5,20 +5,35 @@
 {% block content %}
 <div class="content-wrapper">
   <div class="page-header">
-    <h3 class="page-title"><span
-        class="page-title-icon bg-gradient-primary text-white me-2"><i
-          class="mdi mdi-store"></i></span> {{ device.name }}</h3>
-    <nav aria-label="breadcrumb">
-      <ul class="breadcrumb">
-        <li class="breadcrumb-item active" aria-current="page">
-          <li class="breadcrumb-item active" aria-current="page">
-            <a href="{% url 'dashboard' %}"><span
-                class="mdi mdi-keyboard-backspace"></span> Back to Devices</a>
-          </li>
-        </li>
-      </ul>
-    </nav>
+    <h3 class="page-title">
+      <span class="page-title-icon bg-gradient-primary text-white me-2">
+        <i class="mdi mdi-store"></i>
+      </span>
+      {% if device %}{{ device.name }}{% else %}All Devices{% endif %}
+    </h3>
   </div>
+
+  <!-- Device Selector -->
+  <div class="row mb-4">
+    <div class="col-md-4">
+      <form method="get" id="device-form">
+        <select name="device" class="form-control"
+          onchange="document.getElementById('device-form').submit();">
+          <option value>All Devices</option>
+          {% for d in devices %}
+          <option value="{{ d.id }}"
+            {% if device and device.id == d.id %}
+            selected
+            {% endif %}>
+            {{ d.name }}
+          </option>
+          {% endfor %}
+        </select>
+      </form>
+    </div>
+  </div>
+
+  <!-- Revenue Card -->
   <div class="row">
     <div class="col-md-4 stretch-card grid-margin">
       <div class="card bg-gradient-danger card-img-holder text-white">
@@ -27,11 +42,12 @@
             class="card-img-absolute" alt="circle-image" />
           <h4 class="font-weight-normal mb-3">Revenue</h4>
           <h2 class="mb-5">{{ total_amount|intcomma }}</h2>
-          <!-- <h6 class="card-text">Increased by 60%</h6> -->
         </div>
       </div>
     </div>
   </div>
+
+  <!-- Orders Table -->
   <div class="row">
     <div class="col-12 grid-margin">
       <div class="card">
@@ -56,10 +72,8 @@
                 {% for transaction in transactions %}
                 <tr>
                   <td>{{ transaction.order_id.order_code }}</td>
-                  <td>
-                    <a href="{{ transaction.order_id.photo_url_done }}"
-                      target="_blank">Click here</a>
-                  </td>
+                  <td><a href="{{ transaction.order_id.photo_url_done }}"
+                      target="_blank">Click here</a></td>
                   <td>{{ transaction.order_id.device_id.name }}</td>
                   <td>{{ transaction.payment_id.name }}</td>
                   <td>{{ transaction.amount|intcomma }}</td>
@@ -89,6 +103,6 @@
 </div>
 
 <script>
-    let table = new DataTable('#order-table');
-  </script>
+  let table = new DataTable('#order-table');
+</script>
 {% endblock %}

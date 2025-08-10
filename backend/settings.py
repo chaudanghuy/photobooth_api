@@ -61,7 +61,7 @@ SECRET_KEY = 'django-insecure-mk2xtk=yk6e7g%ro2xoh-h+7e0=-@s(*ri+j@6qf61cu$=l4e%
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['photobooth.phapsuit.com']
+ALLOWED_HOSTS = ['photobooth.phapsuit.com', '127.0.0.1']
 
 
 # Application definition
