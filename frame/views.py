@@ -337,7 +337,7 @@ class UploadPhotoCloud(APIView):
 class FrameAPI(APIView):
     
     def get(self, request, *args, **kwargs):
-        frames = Frame.objects.exclude(title='3-cutx2').exclude(title='5-cutx2')        
+        frames = Frame.objects.exclude(title='3-cutx2')        
 
         serializer = FrameSerializer(frames, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
