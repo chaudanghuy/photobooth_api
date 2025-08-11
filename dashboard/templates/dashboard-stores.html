@@ -16,7 +16,7 @@
   <!-- Device Selector -->
   <div class="row mb-4">
     <div class="col-md-4">
-      <form method="get" id="device-form">
+      <form method="get" id="device-form" class="d-flex align-items-center ">
         <select name="device" class="form-control"
           onchange="document.getElementById('device-form').submit();">
           <option value>All Devices</option>
@@ -29,6 +29,11 @@
           </option>
           {% endfor %}
         </select>
+        {% if device %}
+        <a href="/frames?device={{ device.id }}" class="btn btn-primary ms-2">
+          Setup
+        </a>
+        {% endif %}
       </form>
     </div>
   </div>

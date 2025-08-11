@@ -24,6 +24,7 @@ from django.urls import reverse_lazy
 from django.core.files.base import ContentFile
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
+from django.shortcuts import render, get_object_or_404
 
 import cloudinary.uploader
 
@@ -337,13 +338,46 @@ class UploadPhotoCloud(APIView):
 class FrameAPI(APIView):
     
     def get(self, request, *args, **kwargs):
-        frames = Frame.objects.exclude(title='3-cutx2')        
+        frames = Frame.objects.all()        
+        device_id = request.query_params.get('device') 
+        if device_id:
+            frames = frames.filter(device_id=device_id)
 
         serializer = FrameSerializer(frames, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    def post(self, request, *args, **kwargs):
-        serializer = FrameSerializer(data=request.data)
+    def post(self, request, *args, **kwargs):        
+        device_id = request.query_params.get('device_id')
+        if not device_id:
+            return Response(
+                {"error": "Device ID is required"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        try:
+            device_id = int(device_id)
+        except ValueError:
+            return Response(
+                {"error": "Invalid Device ID"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        data = request.data.copy()
+        data['device'] = device_id
+
+        photo_file = request.data.get('photo')               
+        if photo_file: 
+            upload_data = cloudinary.uploader.upload(photo_file)
+            photo_url = upload_data.get('url')            
+            data['photo'] = photo_url                        
+
+        photo_hover_file = request.data.get('photo_hover')
+        if photo_hover_file:
+            upload_data = cloudinary.uploader.upload(photo_hover_file)
+            photo_hover_url = upload_data.get('url')
+            data['photo_hover'] = photo_hover_url
+
+        serializer = FrameSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -360,12 +394,38 @@ class FrameDetailAPI(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def put(self, request, pk, *args, **kwargs):
-        frame = Frame.objects.get(id=pk)
-        form = FrameForm(request.POST, request.FILES, instance=frame)
+        try:
+            frame = Frame.objects.get(id=pk)
+        except Frame.DoesNotExist:
+            return JsonResponse({'error': 'Frame not found'}, status=status.HTTP_404_NOT_FOUND)
+
+        data = request.data.copy()
+
+        # Preserve old photo if not provided
+        if 'photo' not in request.FILES and not data.get('photo'):
+            data['photo'] = frame.photo  # keep existing
+        else:
+            photo_file = request.FILES.get('photo')
+            if photo_file:
+                upload_data = cloudinary.uploader.upload(photo_file)
+                data['photo'] = upload_data.get('url')
+
+        # Preserve old photo_hover if not provided
+        if 'photo_hover' not in request.FILES and not data.get('photo_hover'):
+            data['photo_hover'] = frame.photo_hover  # keep existing
+        else:
+            photo_hover_file = request.FILES.get('photo_hover')
+            if photo_hover_file:
+                upload_data = cloudinary.uploader.upload(photo_hover_file)
+                data['photo_hover'] = upload_data.get('url')
+
+        form = FrameForm(data, instance=frame)
         if form.is_valid():
             form.save()
             return JsonResponse({'message': 'OK'}, status=status.HTTP_200_OK)
+
         return JsonResponse(form.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
     def delete(self, request, pk, *args, **kwargs):
         frame = Frame.objects.get(id=pk)
@@ -408,20 +468,34 @@ class FrameList(LoginRequiredMixin, View):
     template_name = "frames/list.html"
 
     def get(self, request, *args, **kwargs):
+        device_id = request.GET.get('device')
+        selected_device = None
+        if device_id:
+            selected_device = get_object_or_404(Device, pk=device_id)    
         devices = Device.objects.all()        
         return render(
-            request, self.template_name, {"devices": devices, "positions": POSITION_FRAMES}
+            request, self.template_name, {"devices": devices, "positions": POSITION_FRAMES, "selected_device": selected_device,}
         )
     
     def post(self, request, *args, **kwargs):
         devices = Device.objects.all()
-        form = FrameForm(request.POST, request.FILES)
+        data = request.POST.copy()
+
+        if 'photo' in request.FILES:
+            upload_data = cloudinary.uploader.upload(request.FILES['photo'])
+            data['photo'] = upload_data.get('url')
+
+        if 'photo_hover' in request.FILES:
+            upload_data = cloudinary.uploader.upload(request.FILES['photo_hover'])
+            data['photo_hover'] = upload_data.get('url')
+
+        form = FrameForm(data)  # no request.FILES since we already uploaded
         if form.is_valid():
             form.save()
             return JsonResponse({"message": "Frame created successfully"}, status=201)
         else:
             messages.error(request, form.errors)
-        return JsonResponse({"message": "Failed to create frame"}, status=400)
+            return JsonResponse({"message": "Failed to create frame", "errors": form.errors}, status=400)
     
     def put(self, request, *args, **kwargs):
         frame_id = request.POST.get('frame_id')

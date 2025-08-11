@@ -11,7 +11,9 @@
         <li class="breadcrumb-item">
           <a href="#">Setup</a>
         </li>
-        <li class="breadcrumb-item active" aria-current="page">Device 1</li>
+        <li class="breadcrumb-item active" aria-current="page">
+          {{ selected_device.name }}
+        </li>
       </ol>
     </nav>
   </div>
@@ -118,14 +120,21 @@
           </div>
           <div class="form-group">
             <label for="photo">Photo</label>
-            <input class="form-control add-photo-input" type="file" id="photo" name="photo">
-            <img id="photo_preview" class="img-thumbnail img-fluid photo_preview_add" src="#"
+            <input class="form-control add-photo-input" type="file" id="photo"
+              name="photo">
+            <input type="hidden" name="photo_url" id="photo_url" />
+            <img id="photo_preview"
+              class="img-thumbnail img-fluid photo_preview_add" src="#"
               alt="Photo Preview" style="display: none; max-width: 20%;"><br>
           </div>
           <div class="form-group">
             <label for="photo_hover">Photo (hover)</label>
-            <input class="form-control add-photo-input" type="file" id="photo_hover" name="photo_hover">
-            <img id="photo_hover_preview" class="img-thumbnail img-fluid photo_hover_preview_add"
+            <input class="form-control add-photo-input" type="file"
+              id="photo_hover" name="photo_hover"
+              onchange="previewPhotoHover(event)">
+            <inptu type="hidden" name="photo_hover_url" id="photo_hover_url" />
+            <img id="photo_hover_preview"
+              class="img-thumbnail img-fluid photo_hover_preview_add"
               src="#" alt="Photo Preview"
               style="display: none; max-width: 20%;"><br>
           </div>
@@ -171,14 +180,18 @@
           </div>
           <div class="form-group">
             <label for="photo">Photo</label>
-            <input class="form-control edit-photo-input" type="file" id="photo" name="photo">
-            <img class="img-thumbnail img-fluid photo_preview_edit" id="photo_preview" src
+            <input class="form-control edit-photo-input" type="file" id="photo"
+              name="photo">
+            <img class="img-thumbnail img-fluid photo_preview_edit"
+              id="photo_preview" src
               alt="Photo Preview" style="max-width: 20%;"><br>
           </div>
           <div class="form-group">
             <label for="photo_hover">Photo (hover)</label>
-            <input class="form-control edit-photo-input" type="file" id="photo_hover" name="photo_hover">
-            <img class="img-thumbnail img-fluid photo_hover_preview_edit" id="photo_hover_preview" src
+            <input class="form-control edit-photo-input" type="file"
+              id="photo_hover" name="photo_hover">
+            <img class="img-thumbnail img-fluid photo_hover_preview_edit"
+              id="photo_hover_preview" src
               alt="Photo Hover Preview" style="max-width: 20%;"><br>
           </div>
           <div class="form-group">
