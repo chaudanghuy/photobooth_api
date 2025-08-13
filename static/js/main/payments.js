@@ -78,14 +78,14 @@ $('body').on('click', '.edit-payment', function (e) {
             editPaymentForm.find('#name').val(response.name);
             editPaymentForm.find('#code').val(response.code);
             editPaymentForm.find('#method').val(response.method);
-            editPaymentForm.find('#appID').attr('src', response.appID);
-            editPaymentForm.find('#key1').attr('src', response.key1);
-            editPaymentForm.find('#key2').attr('src', response.key2);
-            editPaymentForm.find('#endpoint_sandbox').attr('src', response.endpoint_sandbox);
-            editPaymentForm.find('#endpoint_prod').attr('src', response.endpoint_prod);
-            editPaymentForm.find('#token').attr('src', response.token);
-            editPaymentForm.find('#username').attr('src', response.username);
-            editPaymentForm.find('#password').attr('src', response.password);
+            editPaymentForm.find('#appID').val(response.appID);
+            editPaymentForm.find('#key1').val(response.key1);
+            editPaymentForm.find('#key2').val(response.key2);
+            editPaymentForm.find('#endpoint_sandbox').val(response.endpoint_sandbox);
+            editPaymentForm.find('#endpoint_prod').val(response.endpoint_prod);
+            editPaymentForm.find('#token').val(response.token);
+            editPaymentForm.find('#username').val(response.username);
+            editPaymentForm.find('#password').val(response.password);
             editPaymentForm.find('#is_active').val(response.is_active);
         }
     })
@@ -191,8 +191,8 @@ function loadPayments() {
 function loadPaymentPhoto(name) {
     if (name == 'Cash') {
         return 'https://cdn.icon-icons.com/icons2/550/PNG/512/business-color_payment_icon-icons.com_53442.png';
-    } else if (name == 'Zalopay') {
-        return 'https://cdn.freebiesupply.com/logos/large/2x/zalo-1-logo-svg-vector.svg';
+    } else if (name == 'QR') {
+        return 'https://png.pngtree.com/png-clipart/20231102/original/pngtree-scan-to-pay-with-smartphone-and-qr-code-in-blue-black-png-image_13488065.png';
     } else if (name == 'Momo') {
         return 'https://cdn.haitrieu.com/wp-content/uploads/2022/10/Logo-MoMo-Square.png';
     } else if (name == 'REDEEM') {

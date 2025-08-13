@@ -4,7 +4,7 @@ from django.db import models
 class Sticker(models.Model):
     category = models.CharField(max_length=100)
     title = models.CharField(max_length=100)    
-    photo = models.ImageField(upload_to='stickers')
+    photo = models.URLField(max_length=500, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     

@@ -13,6 +13,8 @@ from .forms import StickerForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 
+import cloudinary.uploader
+
 # Create your views here.
 class StickerAPI(APIView):
     def get(self, request, *args, **kwargs):
@@ -25,7 +27,13 @@ class StickerAPI(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)     
     
     def post(self, request, *args, **kwargs):
-        form = StickerForm(request.POST, request.FILES)
+        data = request.POST.copy()
+
+        if 'photo' in request.FILES:
+            upload_data = cloudinary.uploader.upload(request.FILES['photo'])
+            data['photo'] = upload_data.get('url')
+            
+        form = StickerForm(data)        
         if form.is_valid():
             form.save()
             return JsonResponse({'success': True})
@@ -42,7 +50,17 @@ class StickerDetailAPI(APIView):
     
     def put(self, request, pk, *args, **kwargs):
         sticker = Sticker.objects.get(id=pk)        
-        form = StickerForm(request.POST, request.FILES, instance=sticker)
+        data = request.data.copy()
+
+        if 'photo' not in request.FILES and not data.get('photo'):
+            data['photo'] = sticker.photo  # keep existing
+        else: 
+            photo_file = request.FILES.get('photo')
+            if photo_file:
+                upload_data = cloudinary.uploader.upload(photo_file)
+                data['photo'] = upload_data.get('url')
+
+        form = StickerForm(data, instance=sticker)
         if form.is_valid():
             form.save()
             return JsonResponse({'success': True})

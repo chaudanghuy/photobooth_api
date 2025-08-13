@@ -19,6 +19,8 @@ from django.conf import settings
 from background.models import Background
 from frame.models import Frame
 
+import cloudinary.uploader
+
 # Create your views here.
 
 BACKGROUND_API_URL = settings.DEV_URL + "backgrounds/api"
@@ -48,10 +50,25 @@ class LayoutAPI(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, *args, **kwargs):
-        form = LayoutForm(request.POST, request.FILES)
+        data = request.POST.copy()
+
+        if 'photo' in request.FILES:
+            upload_data = cloudinary.uploader.upload(request.FILES['photo'])
+            data['photo'] = upload_data.get('url')
+
+        if 'photo_cover' in request.FILES:
+            upload_data = cloudinary.uploader.upload(request.FILES['photo_cover'])
+            data['photo_cover'] = upload_data.get('url')
+
+        if 'photo_full' in request.FILES:
+            upload_data = cloudinary.uploader.upload(request.FILES['photo_full'])
+            data['photo_full'] = upload_data.get('url')
+
+        form = LayoutForm(data)
+        
         if form.is_valid():
             form.save()
-            return JsonResponse({"message": "Layout created successfully"}, status=201)
+            return JsonResponse({"message": "Layout created successfully"}, status=201)                    
         return JsonResponse({"message": "Failed to create layout"}, status=400)
     
 class LayoutDetailAPI(APIView):
@@ -65,7 +82,33 @@ class LayoutDetailAPI(APIView):
     
         def put(self, request, pk, *args, **kwargs):
             layout = Layout.objects.get(id=pk)
-            form = LayoutForm(request.POST, request.FILES, instance=layout)
+            data = request.data.copy()
+
+            if 'photo' not in request.FILES and not data.get('photo'):
+                data['photo'] = layout.photo  # keep existing
+            else: 
+                photo_file = request.FILES.get('photo')
+                if photo_file:
+                    upload_data = cloudinary.uploader.upload(photo_file)
+                    data['photo'] = upload_data.get('url')
+            
+            if 'photo_cover' not in request.FILES and not data.get('photo_cover'):
+                data['photo_cover'] = layout.photo_cover  # keep existing
+            else: 
+                photo_cover_file = request.FILES.get('photo_cover')
+                if photo_cover_file:
+                    upload_data = cloudinary.uploader.upload(photo_cover_file)
+                    data['photo_cover'] = upload_data.get('url')
+            
+            if 'photo_full' not in request.FILES and not data.get('photo_full'):
+                data['photo_full'] = layout.photo_full  # keep existing
+            else: 
+                photo_full_file = request.FILES.get('photo_full')
+                if photo_full_file:
+                    upload_data = cloudinary.uploader.upload(photo_full_file)
+                    data['photo_full'] = upload_data.get('url')
+
+            form = LayoutForm(data, instance=layout)
             backgrounds = Background.objects.all()
             frames = Frame.objects.all()
             if form.is_valid():

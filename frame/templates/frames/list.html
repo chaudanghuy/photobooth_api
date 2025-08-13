@@ -22,21 +22,16 @@
   <div class="row">
     <div class="stepper-wrapper">
       <div class="stepper-item completed">
-        <a href="{% url 'frames' %}"
-          class="text-decoration-none">
-          <div class="step-counter active">1</div>
-          <div class="step-name">Frame</div>
-        </a>
+        <div class="step-counter active">1</div>
+        <div class="step-name">Frame</div>
       </div>
       <div class="stepper-item">
-        <a href="{% url 'backgrounds' %}?frame=1"
+        <div class="step-counter">2</div>
+        <div class="step-name">Stylist</div>
+      </div>
+      <div class="stepper-item">
+        <a href="{% url 'stickers' %}"
           class="text-decoration-none text-black">
-          <div class="step-counter">2</div>
-          <div class="step-name">Stylist</div>
-        </a>
-      </div>
-      <div class="stepper-item">
-        <a href="{% url 'stickers' %}" class="text-decoration-none text-black">
           <div class="step-counter">3</div>
           <div class="step-name">Sticker</div>
         </a>

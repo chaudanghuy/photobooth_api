@@ -15,6 +15,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.conf import settings
 
+import cloudinary.uploader
+
 # Create your views here.
 
 BACKGROUND_POSITIONS = ['row-1-1', 'row-1-2', 'row-1-3', 'row-1-4', 'row-1-5']
@@ -52,12 +54,66 @@ class BackgroundDetailAPI(APIView):
     
     def put(self, request, pk, *args, **kwargs):
         background = Background.objects.get(id=pk)
-        form = BackgroundForm(request.POST, request.FILES, instance=background)
+        data = request.data.copy()
+
+        if 'photo' not in request.FILES and not data.get('photo'):
+            data['photo'] = background.photo  # keep existing
+        else:
+            photo_file = request.FILES.get('photo')
+            if photo_file:
+                upload_data = cloudinary.uploader.upload(photo_file)
+                data['photo'] = upload_data.get('url')
+
+        # photo_hover
+        if 'photo_hover' not in request.FILES and not data.get('photo_hover'):
+            data['photo_hover'] = background.photo_hover  # keep existing
+        else:
+            photo_hover_file = request.FILES.get('photo_hover')
+            if photo_hover_file:
+                upload_data = cloudinary.uploader.upload(photo_hover_file)
+                data['photo_hover'] = upload_data.get('url')
+
+        # photo_kr
+        if 'photo_kr' not in request.FILES and not data.get('photo_kr'):
+            data['photo_kr'] = background.photo_kr  # keep existing
+        else:
+            photo_kr_file = request.FILES.get('photo_kr')
+            if photo_kr_file:
+                upload_data = cloudinary.uploader.upload(photo_kr_file)
+                data['photo_kr'] = upload_data.get('url')
+        
+        # photo_kr_hover
+        if 'photo_kr_hover' not in request.FILES and not data.get('photo_kr_hover'):
+            data['photo_kr_hover'] = background.photo_kr_hover  # keep existing
+        else:
+            photo_kr_hover_file = request.FILES.get('photo_kr_hover')
+            if photo_kr_hover_file:
+                upload_data = cloudinary.uploader.upload(photo_kr_hover_file)
+                data['photo_kr_hover'] = upload_data.get('url')
+        
+        # photo_vn
+        if 'photo_vn' not in request.FILES and not data.get('photo_vn'):
+            data['photo_vn'] = background.photo_vn  # keep existing
+        else:
+            photo_vn_file = request.FILES.get('photo_vn')
+            if photo_vn_file:
+                upload_data = cloudinary.uploader.upload(photo_vn_file)
+                data['photo_vn'] = upload_data.get('url')
+        
+        # photo_vn_hover
+        if 'photo_vn_hover' not in request.FILES and not data.get('photo_vn_hover'):
+            data['photo_vn_hover'] = background.photo_vn_hover  # keep existing
+        else:
+            photo_vn_hover_file = request.FILES.get('photo_vn_hover')
+            if photo_vn_hover_file:
+                upload_data = cloudinary.uploader.upload(photo_vn_hover_file)
+                data['photo_vn_hover'] = upload_data.get('url')
+
+        form = BackgroundForm(data, instance=background)
         if form.is_valid():
             form.save()
             return JsonResponse({"message": "Background updated successfully"}, status=201)
-        else:
-            messages.error(request, form.errors)
+        
         return JsonResponse({"message": "Failed to update background"}, status=400)
     
     def delete(self, request, pk, *args, **kwargs):
@@ -75,13 +131,39 @@ class BackgroundList(LoginRequiredMixin, ListView):
         return render(request, 'backgrounds/list.html', {'positions': BACKGROUND_POSITIONS, 'backgrounds': backgrounds, 'frames': frames, 'frame': frame, 'frameId': int(frameId), 'position_list': POSITION_LIST})
     
     def post(self, request):
-        form = BackgroundForm(request.POST, request.FILES)
+        data = request.POST.copy()        
+
+        if 'photo' in request.FILES:
+            upload_data = cloudinary.uploader.upload(request.FILES['photo'])
+            data['photo'] = upload_data.get('url')
+
+        if 'photo_hover' in request.FILES:
+            upload_data = cloudinary.uploader.upload(request.FILES['photo_hover'])
+            data['photo_hover'] = upload_data.get('url')
+
+        if 'photo_kr' in request.FILES:
+            upload_data = cloudinary.uploader.upload(request.FILES['photo_kr'])
+            data['photo_kr'] = upload_data.get('url')
+
+        if 'photo_kr_hover' in request.FILES:
+            upload_data = cloudinary.uploader.upload(request.FILES['photo_kr_hover'])
+            data['photo_kr_hover'] = upload_data.get('url')
+
+        if 'photo_vn' in request.FILES:
+            upload_data = cloudinary.uploader.upload(request.FILES['photo_vn'])
+            data['photo_vn'] = upload_data.get('url')
+
+        if 'photo_vn_hover' in request.FILES:
+            upload_data = cloudinary.uploader.upload(request.FILES['photo_vn_hover'])
+            data['photo_vn_hover'] = upload_data.get('url')
+            
+        form = BackgroundForm(data)
         if form.is_valid():
             form.save()
             return JsonResponse({"message": "Background created successfully"}, status=201)
         else:
             messages.error(request, form.errors)
-        return JsonResponse({"message": "Failed to create background"}, status=400)
+            return JsonResponse({"message": "Failed to create background"}, status=400)
     
     def put(self, request, pk):
         background = Background.objects.get(id=pk)
